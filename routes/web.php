@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\UserController;
 
 require __DIR__.'/auth.php';
 /*
@@ -32,9 +33,20 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function (){
 
-    Route::resource('categories', CategoryController::class);
+    Route::middleware('admin')->group(function (){
+        Route::resource('categories', CategoryController::class);
+        Route::controller(UserController::class)->group(function (){
+            Route::get('users','userList')->name('user.index');
+            Route::delete('user/{id}','userDelete')->name('user.delete');
+        });
+    });
+
+
 
 });
+
+
+
 
 
 

@@ -26,6 +26,11 @@
         <!--
           Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow"
       -->
+
+        @php
+            $adminRole = \App\Models\Role::where('title','Admin')->first();
+            $user = \Illuminate\Support\Facades\Auth::user();
+        @endphp
         <div class="logo">
             <a href="http://www.creative-tim.com" class="simple-text logo-mini">
                 CT
@@ -36,18 +41,20 @@
         </div>
         <div class="sidebar-wrapper" id="sidebar-wrapper">
             <ul class="nav">
-                <li>
-                    <a href="./dashboard.html">
-                        <i class="now-ui-icons design_app"></i>
-                        <p>Dashboard</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="./icons.html">
-                        <i class="now-ui-icons education_atom"></i>
-                        <p>Icons</p>
-                    </a>
-                </li>
+                @if($user->role_id == $adminRole->id)
+                    <li>
+                        <a href="{{route('user.index')}}">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Users</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{route('categories.index')}}">
+                            <i class="now-ui-icons education_atom"></i>
+                            <p>Categories</p>
+                        </a>
+                    </li>
+                @endif
                 <li>
                     <a href="./map.html">
                         <i class="now-ui-icons location_map-big"></i>
