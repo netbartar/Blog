@@ -35,9 +35,14 @@
                                             <i class="now-ui-icons ui-2_settings-90"></i>
                                         </button>
                                     </a>
-                                    <button type="button" rel="tooltip" class="btn btn-danger btn-sm btn-icon">
-                                        <i class="now-ui-icons ui-1_simple-remove"></i>
-                                    </button>
+                                    <form method="POST" action="{{route('categories.destroy',$category->id)}}" >
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" rel="tooltip" class="btn btn-danger btn-sm btn-icon">
+                                            <i class="now-ui-icons ui-1_simple-remove"></i>
+                                        </button>
+                                    </form>
+
                                 </td>
                             @endif
 

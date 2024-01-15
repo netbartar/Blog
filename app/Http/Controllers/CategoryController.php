@@ -72,7 +72,9 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $category = $this->findCategory($id);
+        $category->delete();
+        return redirect()->back();
     }
 
     public function findCategory($id)
