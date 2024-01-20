@@ -40,9 +40,7 @@ Route::middleware('auth')->group(function (){
             Route::delete('user/{id}','userDelete')->name('user.delete');
         });
     });
-
-
-
+    
 });
 
 
