@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PostController;
 
 require __DIR__.'/auth.php';
 /*
@@ -40,8 +41,22 @@ Route::middleware('auth')->group(function (){
             Route::delete('user/{id}','userDelete')->name('user.delete');
         });
     });
-    
+    Route::controller(PostController::class)->group(function (){
+
+        Route::name('posts.')->group(function (){
+            Route::get('post/create','createPost')->name('create');
+            Route::post('post/store','storePost')->name('store');
+            Route::get('posts','postList')->name('index');
+            Route::get('post/{id}','postDetails')->name('show');
+            Route::get('post/{id}/edit','postEdit')->name('edit');
+            Route::put('post/{id}','postUpdate')->name('update');
+        });
+    });
 });
+
+
+
+
 
 
 
