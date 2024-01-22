@@ -13,7 +13,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::select('id','title')->get();
+        $categories = Category::select('id','title')->withCount('posts')->get();
         return view('category.index',compact('categories'));
     }
 

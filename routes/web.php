@@ -55,10 +55,13 @@ Route::middleware('auth')->group(function (){
             Route::get('post/{id}','postDetails')->name('show');
             Route::get('post/{id}/edit','postEdit')->name('edit');
             Route::put('post/{id}','postUpdate')->name('update');
+            Route::get('posts/other','postOtherList')->name('other');
         });
     });
 });
 
+
+//TODO add update select category to post
 
 
 

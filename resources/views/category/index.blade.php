@@ -27,7 +27,7 @@
                         <tr>
                             <td class="text-center">{{$key + 1}}</td>
                             <td>{{$category->title}}</td>
-                            <td>--</td>
+                            <td>{{$category->posts_count}}</td>
                             @if($category->id != 1)
                                 <td class="td-actions text-right">
                                     <a href="{{route('categories.edit',$category->id)}}">

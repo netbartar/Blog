@@ -23,4 +23,10 @@ class Post extends Model
         return $this->belongsToMany(Category::class,
             'category_posts','post_id','category_id');
     }
+
+    public function scopeGetPost()
+    {
+        return $this->select('id','title','publication_date','publication_status','author_id')
+            ->with('author:id,name');
+    }
 }

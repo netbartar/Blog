@@ -28,22 +28,44 @@ class PostController extends Controller
             'body' => $request->body,
             'author_id' => Auth::id()
         ]);
-        $post->categories()->attach($request->category_ids);
+
+        $categories = $request->category_ids;
+        if(!$request->category_ids)
+            $categories = [$this->findUnCategorize()];
+
+        $post->categories()->attach($categories);
         return redirect()->route('posts.index');
     }
+
+    public function findUnCategorize()
+    {
+        $unCategorize = Category::where('title', 'un categorize')->first();
+        return $unCategorize->id;
+    }
+
 
     public function postList()
     {
         $adminRoleId = Role::where('title','Admin')->first()->id;
         $userRoleId = Auth::user()->role_id;
-        $query = Post::select('id','title','publication_date','publication_status','author_id')
-            ->with('author:id,name');
+        $query = Post::getPost();
         if(!$this->isAdmin())
         {
             $query = $query->where('author_id',Auth::id());
         }
         $posts = $query->get();
         return view('posts.index',compact('posts','adminRoleId','userRoleId'));
+    }
+
+
+    public function postOtherList()
+    {
+        $query = Post::getPost();
+        $posts = $query
+            ->where('author_id','!=',Auth::id())
+            ->where('publication_status','publish')
+            ->get();
+        return view('posts.other',compact('posts'));
     }
 
     public function isAdmin()
