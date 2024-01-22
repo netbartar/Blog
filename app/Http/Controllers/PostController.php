@@ -32,10 +32,25 @@ class PostController extends Controller
 
     public function postList()
     {
-        $posts = Post::select('id','title','publication_date','publication_status','author_id')
-            ->with('author:id,name')
-            ->where('author_id',Auth::id())->get();
+
+        $query = Post::select('id','title','publication_date','publication_status','author_id')
+            ->with('author:id,name');
+        if(!$this->isAdmin())
+        {
+            $query = $query->where('author_id',Auth::id());
+        }
+        $posts = $query->get();
         return view('posts.index',compact('posts'));
+    }
+
+    public function isAdmin()
+    {
+        $result = false;
+        if(Auth::user()->role_id == 1)
+            $result = true;
+
+        return $result;
+
     }
 
     public function postDetails($id)

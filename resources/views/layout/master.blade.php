@@ -56,9 +56,9 @@
                     </li>
                 @endif
                 <li>
-                    <a href="./map.html">
+                    <a href="{{route('posts.index')}}">
                         <i class="now-ui-icons location_map-big"></i>
-                        <p>Maps</p>
+                        <p>Posts</p>
                     </a>
                 </li>
                 <li>
