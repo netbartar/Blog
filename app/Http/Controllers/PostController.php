@@ -6,6 +6,8 @@ use App\Http\Requests\CreatePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Role;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +34,8 @@ class PostController extends Controller
 
     public function postList()
     {
-
+        $adminRoleId = Role::where('title','Admin')->first()->id;
+        $userRoleId = Auth::user()->role_id;
         $query = Post::select('id','title','publication_date','publication_status','author_id')
             ->with('author:id,name');
         if(!$this->isAdmin())
@@ -40,7 +43,7 @@ class PostController extends Controller
             $query = $query->where('author_id',Auth::id());
         }
         $posts = $query->get();
-        return view('posts.index',compact('posts'));
+        return view('posts.index',compact('posts','adminRoleId','userRoleId'));
     }
 
     public function isAdmin()
@@ -74,5 +77,41 @@ class PostController extends Controller
         ]);
 
         return redirect()->route('posts.index');
+    }
+
+
+    public function postDelete($id)
+    {
+        $post = Post::find($id);
+        $post->delete();
+        return redirect()->back();
+    }
+
+    public function postPublish($id)
+    {
+
+
+//        $post = Post::find($id);
+//        $status = 'publish';
+//        $date = Carbon::now();
+//        if($post->publication_status == 'publish')
+//        {
+//            $status = 'draft';
+//            $date = null;
+//        }
+//
+//        $post->update([
+//            'publication_status' => $status,
+//            'publication_date' => $date
+//        ]);
+
+        $post = Post::find($id);
+        $post->update([
+            'publication_status' => 'publish',
+            'publication_date' => Carbon::now()
+        ]);
+
+        return redirect()->back();
+
     }
 }

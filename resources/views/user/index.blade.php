@@ -27,7 +27,7 @@
                     <td class="text-center">{{$key + 1}}</td>
                     <td>{{$user->name}}</td>
                     <td>{{$user->email}}</td>
-                    <td>--</td>
+                    <td>{{$user->posts_count}}</td>
                     <td>{{verta($user->created_at) }}</td>
                     @if($user->id != 1)
                         <td class="td-actions text-right">

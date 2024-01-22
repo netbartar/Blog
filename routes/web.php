@@ -40,7 +40,12 @@ Route::middleware('auth')->group(function (){
             Route::get('users','userList')->name('user.index');
             Route::delete('user/{id}','userDelete')->name('user.delete');
         });
+        Route::controller(PostController::class)->group(function (){
+            Route::delete('post/{id}','postDelete')->name('posts.delete');
+            Route::get('post/publish/{id}','postPublish')->name('posts.publish');
+        });
     });
+
     Route::controller(PostController::class)->group(function (){
 
         Route::name('posts.')->group(function (){
