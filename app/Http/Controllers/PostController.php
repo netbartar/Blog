@@ -80,24 +80,48 @@ class PostController extends Controller
 
     public function postDetails($id)
     {
-        $post = Post::find($id);
-        return view('posts.show',compact('post'));
+        $post = Post::with('comments')->find($id);
+//        if($post->author_id == Auth::id())
+            return view('posts.show',compact('post'));
+//        return 'forbidden';
     }
 
     public function postEdit($id)
     {
-        $post = Post::find($id);
-        return view('posts.edit',compact('post'));
+        $post = Post::with('categories:id,title')->where('id',$id)->first();
+        $selected_categories = $post->categories->pluck('id')->toArray();
+        $categories = Category::select('id','title')->get();
+        return view('posts.edit',compact('post','categories','selected_categories'));
     }
 
     public function postUpdate(UpdatePostRequest $request, $id)
     {
-        $post = Post::find($id);
+        $post = Post::with('categories:id,title')->find($id);
+        $postCategories = $post->categories->pluck('id')->toArray();
         $post->update([
             'title' => $request->title,
             'body' => $request->body,
         ]);
 
+        if($request->category_ids)
+        {
+            $requestCategories = $request->category_ids;
+            foreach ($postCategories as $key=>$post_category)
+            {
+                foreach ($requestCategories as $key2=>$category)
+                {
+                    if(in_array($post_category,$requestCategories))
+                    {
+                        unset($postCategories[$key]);
+                        unset($requestCategories[$key2]);
+                    }
+                }
+            }
+            if(count($postCategories))
+                $post->categories()->detach($postCategories);
+
+            $post->categories()->attach($requestCategories);
+        }
         return redirect()->route('posts.index');
     }
 

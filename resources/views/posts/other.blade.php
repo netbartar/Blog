@@ -29,14 +29,11 @@
                     <td>{{$post->publication_status}}</td>
                     <td>{{$post->publication_date}}</td>
                     <td class="td-actions text-right">
-
-{{--                            <form class="d-inline-block" method="POST" action="{{route('posts.delete',$post->id)}}">--}}
-{{--                                @csrf--}}
-{{--                                @method('DELETE')--}}
-{{--                                <button type="submit" rel="tooltip" class="btn btn-danger btn-sm btn-icon">--}}
-{{--                                    <i class="now-ui-icons ui-1_simple-remove"></i>--}}
-{{--                                </button>--}}
-{{--                            </form>--}}
+                        <a href="{{route('comment.create',$post->id)}}">
+                            <button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon">
+                                <i class="now-ui-icons users_single-02"></i>
+                            </button>
+                        </a>
 
                     </td>
                 </tr>

@@ -29,4 +29,9 @@ class Post extends Model
         return $this->select('id','title','publication_date','publication_status','author_id')
             ->with('author:id,name');
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

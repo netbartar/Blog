@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
 
 require __DIR__.'/auth.php';
 /*
@@ -44,6 +45,8 @@ Route::middleware('auth')->group(function (){
             Route::delete('post/{id}','postDelete')->name('posts.delete');
             Route::get('post/publish/{id}','postPublish')->name('posts.publish');
         });
+
+        Route::get('comments',[CommentController::class,'commentList'])->name('comment.index');
     });
 
     Route::controller(PostController::class)->group(function (){
@@ -58,10 +61,17 @@ Route::middleware('auth')->group(function (){
             Route::get('posts/other','postOtherList')->name('other');
         });
     });
+
+    Route::controller(CommentController::class)->group(function (){
+
+        Route::get('comment/create/{id}','commentCreate')->name('comment.create');
+        Route::post('comment/store','storeComment')->name('comment.store');
+        Route::delete('comment/{id}','commentDelete')->name('comment.delete');
+        Route::get('comment/{id}','commentApprove')->name('comment.approve');
+    });
 });
 
 
-//TODO add update select category to post
 
 
 

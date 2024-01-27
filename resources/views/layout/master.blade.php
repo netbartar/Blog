@@ -54,6 +54,19 @@
                             <p>Categories</p>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{route('comment.index')}}">
+                            <i class="now-ui-icons ui-1_bell-53"></i>
+                            <p>Comments</p>
+                        </a>
+                    </li>
+                @else
+                    <li>
+                        <a href="{{route('posts.other')}}">
+                            <i class="now-ui-icons location_map-big"></i>
+                            <p>Other Posts</p>
+                        </a>
+                    </li>
                 @endif
                 <li>
                     <a href="{{route('posts.index')}}">
@@ -61,18 +74,8 @@
                         <p>Posts</p>
                     </a>
                 </li>
-                <li>
-                    <a href="{{route('posts.other')}}">
-                        <i class="now-ui-icons location_map-big"></i>
-                        <p>Other Posts</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="./notifications.html">
-                        <i class="now-ui-icons ui-1_bell-53"></i>
-                        <p>Notifications</p>
-                    </a>
-                </li>
+
+
                 <li>
                     <a href="./user.html">
                         <i class="now-ui-icons users_single-02"></i>

@@ -20,6 +20,14 @@
             @endif
         </div>
         <div class="form-group">
+            <label for="category">Select Categories</label>
+            <select multiple class="form-control" id="category" name="category_ids[]">
+                @foreach($categories as $category)
+                    <option value="{{$category->id}}" {{in_array($category->id,$selected_categories) ? 'selected' : ''}}> {{$category->title}} </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="form-group">
             <label for="body">Body</label>
             <textarea class="form-control" id="body" rows="3" name="body">{{$post->body}}</textarea>
         </div>
