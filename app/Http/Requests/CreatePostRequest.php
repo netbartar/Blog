@@ -22,7 +22,8 @@ class CreatePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|unique:posts,title'
+            'title' => 'required|unique:posts,title',
+            'image' => 'file'
         ];
     }
 }

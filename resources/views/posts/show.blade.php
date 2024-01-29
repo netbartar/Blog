@@ -17,7 +17,7 @@
             <a href="{{route('posts.create')}}" class="btn btn-primary">Create new post</a>
         </div>
         <br><br>
-
+        <img src="{{asset('storage/'.$post->file->path)}}">
         <h2>List of Posts</h2>
         <table class="table">
             <thead>

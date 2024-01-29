@@ -5,15 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreatePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Category;
+use App\Models\File;
 use App\Models\Post;
 use App\Models\Role;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
+
 
     public function createPost()
     {
@@ -23,6 +26,7 @@ class PostController extends Controller
 
     public function storePost(CreatePostRequest $request)
     {
+
         $post = Post::create([
             'title' => $request->title,
             'body' => $request->body,
@@ -34,7 +38,32 @@ class PostController extends Controller
             $categories = [$this->findUnCategorize()];
 
         $post->categories()->attach($categories);
+
+        if($request->hasFile('image'))
+        {
+            $file = $request->file('image');
+            $path = $file->store('posts/'.$post->id,'public');
+            $storeFile = $this->storeFileInDb($path,$file);
+            $this->updateFileIdInPost($post,$storeFile->id);
+        }
         return redirect()->route('posts.index');
+    }
+
+
+    public function storeFileInDb($path,$file)
+    {
+        return File::create([
+            'path' => $path,
+            'file_name' => $file->getClientOriginalName(),
+            'file_size' => $file->getSize(),
+            'extension' => $file->getClientOriginalExtension(),
+        ]);
+    }
+
+    public function updateFileIdInPost($post,$file_id)
+    {
+        $post->file_id = $file_id;
+        $post->save();
     }
 
     public function findUnCategorize()
@@ -80,7 +109,7 @@ class PostController extends Controller
 
     public function postDetails($id)
     {
-        $post = Post::with('comments')->find($id);
+        $post = Post::with('comments','file:id,path')->find($id);
 //        if($post->author_id == Auth::id())
             return view('posts.show',compact('post'));
 //        return 'forbidden';
