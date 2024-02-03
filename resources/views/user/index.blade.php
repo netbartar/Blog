@@ -20,7 +20,6 @@
         </tr>
         </thead>
         <tbody>
-
         @if($users)
             @foreach($users as $key => $user)
                 <tr>
@@ -38,17 +37,15 @@
                                     <i class="now-ui-icons ui-1_simple-remove"></i>
                                 </button>
                             </form>
-
                         </td>
                     @endif
-
                 </tr>
             @endforeach
         @endif
         </tbody>
     </table>
 
-
+    {{$users->links()}}
 
 
 @endsection

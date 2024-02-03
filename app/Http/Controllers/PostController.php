@@ -6,6 +6,7 @@ use App\Http\Requests\CreatePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Category;
 use App\Models\File;
+use App\Models\Image;
 use App\Models\Post;
 use App\Models\Role;
 use Carbon\Carbon;
@@ -16,7 +17,6 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
-
 
     public function createPost()
     {
@@ -43,20 +43,21 @@ class PostController extends Controller
         {
             $file = $request->file('image');
             $path = $file->store('posts/'.$post->id,'public');
-            $storeFile = $this->storeFileInDb($path,$file);
+            $storeFile = $this->storeFileInDb($path,$file,$post->id);
             $this->updateFileIdInPost($post,$storeFile->id);
         }
         return redirect()->route('posts.index');
     }
 
 
-    public function storeFileInDb($path,$file)
+    public function storeFileInDb($path,$file,$post_id)
     {
-        return File::create([
+        return Image::create([
             'path' => $path,
-            'file_name' => $file->getClientOriginalName(),
-            'file_size' => $file->getSize(),
-            'extension' => $file->getClientOriginalExtension(),
+            'name' => $file->getClientOriginalName(),
+            'size' => $file->getSize(),
+            'imageable_type' => 'App\Models\Post',
+            'imageable_id' => $post_id
         ]);
     }
 
@@ -115,9 +116,10 @@ class PostController extends Controller
 //        return 'forbidden';
     }
 
+
     public function postEdit($id)
     {
-        $post = Post::with('categories:id,title')->where('id',$id)->first();
+        $post = Post::with('categories:id,title','file:id,path')->where('id',$id)->first();
         $selected_categories = $post->categories->pluck('id')->toArray();
         $categories = Category::select('id','title')->get();
         return view('posts.edit',compact('post','categories','selected_categories'));
@@ -125,13 +127,22 @@ class PostController extends Controller
 
     public function postUpdate(UpdatePostRequest $request, $id)
     {
-        $post = Post::with('categories:id,title')->find($id);
+        $file_id = null;
+        $post = Post::with('categories:id,title','file:id,path')->find($id);
+        Storage::delete('public/'.$post->file->path);
+        File::find($post->file->id)->delete();
+        if($request->hasFile('image')) {
+            $file = $request->file('image');
+            $path = $file->store('posts/' . $post->id, 'public');
+            $storeFile = $this->storeFileInDb($path, $file);
+            $file_id = $storeFile->id;
+        }
         $postCategories = $post->categories->pluck('id')->toArray();
         $post->update([
             'title' => $request->title,
             'body' => $request->body,
+            'file_id' => $file_id
         ]);
-
         if($request->category_ids)
         {
             $requestCategories = $request->category_ids;

@@ -10,7 +10,7 @@ class Post extends Model
     use HasFactory;
 
     protected $fillable = [
-      'title', 'body', 'publication_date', 'publication_status', 'author_id', 'file_id'
+        'title', 'body', 'publication_date', 'publication_status', 'author_id', 'file_id'
     ];
 
     public function author()
@@ -21,12 +21,12 @@ class Post extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class,
-            'category_posts','post_id','category_id');
+            'category_posts', 'post_id', 'category_id');
     }
 
     public function scopeGetPost()
     {
-        return $this->select('id','title','publication_date','publication_status','author_id')
+        return $this->select('id', 'title', 'publication_date', 'publication_status', 'author_id')
             ->with('author:id,name');
     }
 
@@ -38,5 +38,10 @@ class Post extends Model
     public function file()
     {
         return $this->belongsTo(File::class);
+    }
+
+    public function images()
+    {
+        return $this->morphOne(Image::class, 'imageable');
     }
 }

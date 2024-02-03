@@ -26,7 +26,8 @@ class UpdatePostRequest extends FormRequest
             'title' => [
                 'required',
                 Rule::unique('posts')->ignore($this->route('id'))
-                ]
+                ],
+//            'image' => 'file'
         ];
     }
 }

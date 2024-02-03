@@ -10,22 +10,10 @@ use Illuminate\Support\Facades\Storage;
 class UserController extends Controller
 {
 
-
-    public function writeContent()
-    {
-        if(Storage::put('test.txt','test'))
-        {
-
-        }
-        else{
-
-        }
-    }
-
     public function userList()
     {
 
-        $users = User::select('id','name','email','created_at')->withCount('posts')->get();
+        $users = User::select('id','name','email','created_at')->withCount('posts')->simplePaginate(10);
         return view('user.index',compact('users'));
     }
 

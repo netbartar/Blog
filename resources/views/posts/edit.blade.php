@@ -9,7 +9,7 @@
     <br><br>
     <h2>update {{$post->title}}</h2>
 
-    <form method="POST" action="{{route('posts.update',$post->id)}}">
+    <form method="POST" action="{{route('posts.update',$post->id)}}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="form-group">
@@ -30,6 +30,14 @@
         <div class="form-group">
             <label for="body">Body</label>
             <textarea class="form-control" id="body" rows="3" name="body">{{$post->body}}</textarea>
+        </div>
+        <img src="{{asset('storage/'.$post->file->path)}}">
+        <div class="form-group">
+            <label for="image">Image</label>
+            <input type="file" name="image" id="image">
+            @if($errors->has('image'))
+                <span class="text-danger">{{$errors->first('image')}}</span>
+            @endif
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
